@@ -1,0 +1,745 @@
+@import './variables.scss';
+@import './mixin.scss';
+@import './transition.scss';
+@import './element-ui.scss';
+@import './sidebar.scss';
+@import './btn.scss';
+
+
+/* 新疆语 */
+/*
+@font-face{
+  font-family: 'UKIJ Tuz Tom';font-style:normal;font-weight:normal;src: url('ukij/UkijTuzTom.eot?#iefix');src: local('UKIJ Tuz Tom'), local('UKIJ Tuz Tom'), url('ukij/UkijTuzTom.ttf') ;
+}
+*/
+
+
+body {
+  height: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: Arial, PingFang SC, Microsoft YaHei, Helvetica Neue, Helvetica,  Hiragino Sans GB;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+#app {
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.no-padding {
+  padding: 0px !important;
+}
+
+.padding-content {
+  padding: 4px 0;
+}
+
+a:focus,
+a:active {
+  outline: none;
+}
+
+a,
+a:focus,
+a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+
+div:focus {
+  outline: none;
+}
+
+.fr {
+  float: right;
+}
+
+.fl {
+  float: left;
+}
+
+.pr-5 {
+  padding-right: 5px;
+}
+
+.pl-5 {
+  padding-left: 5px;
+}
+
+.block {
+  display: block;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.inlineBlock {
+  display: block;
+}
+
+.clearfix {
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
+}
+
+aside {
+  background: #eef1f6;
+  padding: 8px 24px;
+  margin-bottom: 20px;
+  border-radius: 2px;
+  display: block;
+  line-height: 32px;
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  color: #2c3e50;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  a {
+    color: #337ab7;
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(32, 160, 255);
+    }
+  }
+}
+
+//main-container全局样式
+.app-container {
+  padding: 20px;
+  min-height: 50vh;
+}
+
+.components-container {
+  margin: 30px 50px;
+  position: relative;
+}
+
+.pagination-container {
+
+}
+
+.text-center {
+  text-align: center
+}
+
+.sub-navbar {
+  height: 50px;
+  line-height: 50px;
+  position: relative;
+  width: 100%;
+  text-align: right;
+  padding-right: 20px;
+  transition: 600ms ease position;
+  background: linear-gradient(90deg, rgba(32, 182, 249, 1) 0%, rgba(32, 182, 249, 1) 0%, rgba(33, 120, 241, 1) 100%, rgba(33, 120, 241, 1) 100%);
+
+  .subtitle {
+    font-size: 20px;
+    color: #fff;
+  }
+
+  &.draft {
+    background: #d0d0d0;
+  }
+
+  &.deleted {
+    background: #d0d0d0;
+  }
+}
+
+.link-type,
+.link-type:focus {
+  color: #337ab7;
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(32, 160, 255);
+  }
+}
+
+.filter-container {
+
+  .filter-item {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+//refine vue-multiselect plugin
+.multiselect {
+  line-height: 16px;
+}
+
+.multiselect--active {
+  z-index: 1000 !important;
+}
+
+
+
+// 题目及答题样式表
+.qu-box{
+  margin-bottom: 20px;
+}
+
+.sub-box{
+  margin: 20px 0px 20px 0px;
+}
+
+.qu-box > .split{
+  margin-bottom: 20px;
+  height: 10px;
+  border-bottom: #eee 3px dotted;
+}
+
+.qu-box .score-bar{
+  display: flex;
+  background: #eee;
+  line-height: 25px;
+  padding: 5px;
+  margin-bottom: 20px
+}
+
+.qu-box .score-bar > .mark{
+  width: 50px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.qu-box .score-bar > .mark > .active{
+  color: #ff0000;
+}
+
+
+
+.qu-item{
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.qu-item > .sub{
+  width: 35px;
+  font-weight: 700;
+  color: #5794f7;
+  font-size: 16px;
+  font-style: italic;
+  display: flex;
+  align-items: flex-start;
+  line-height: 24px;
+
+}
+.qu-item > .num{
+  display: inline-block;
+  //background: url(../assets/web/images/quesbg.png) no-repeat 100% 100%;
+  background: no-repeat 100% 100%;
+  background-size: contain;
+  height: 30px;
+  width: 30px;
+  line-height: 25px;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.qu-item > .content{
+  flex-grow: 1;
+  align-items: flex-start;
+}
+.qu-item > .content p{
+  line-height: 24px;
+  margin-top: -0px;
+}
+
+.qu-answer {
+
+}
+
+.qu-answer > .item{
+  display: flex;
+  border: #eee 1px solid;
+  border-radius: 5px;
+  line-height: 20px;
+  margin: 15px 0px 15px 0px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.qu-answer > .active{
+  border: #5794f7 1px solid;
+}
+
+.qu-answer > .item > .tag{
+  width: 10px;
+  font-weight: 700;
+  color: #0a84ff;
+  display: flex;
+  align-items: center;
+}
+
+.qu-answer > .item > .content{
+  flex-grow: 1;
+  padding-left: 10px;
+}
+
+.qu-answer > .item > .right{
+  width: 50px;
+  flex-shrink: 0;
+}
+
+.as-box{
+  border: #eee 1px solid;
+  border-radius: 5px;
+  line-height: 24px;
+  margin: 5px 0px 10px 0px;
+  padding: 10px;
+  font-size: 14px;
+  color: #555;
+  background: #fcfcfc;
+}
+
+
+// 答题卡样式
+
+.card-box{
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  margin-left: -5px;
+}
+
+.card-box .item{
+  width: 30px;
+  height: 40px;
+  background: #eee;
+  border-radius: 2px;
+  font-size: 12px;
+  align-items: center;
+  cursor: pointer;
+  margin:5px 5px 10px 5px
+}
+
+.card-box .item .num{
+  text-align: center;
+  color: #555;
+  font-weight: 700;
+  padding: 3px;
+  height: 20px;
+  line-height: 14px !important;
+}
+
+.card-box .item .current{
+  border-radius: 2px;
+  background: #FFBA00;
+  color: #fff !important;
+}
+
+
+.card-box .item .flag{
+  text-align: center;
+  border-top: #fff 1px solid;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee;
+}
+
+.card-box .item .right{
+  border-radius: 2px;
+  background: #1890ff;
+  color: #fff !important;
+}
+
+.card-box .item .error{
+  border-radius: 2px;
+  background: #FF4B50;
+  color: #fff !important;
+}
+
+
+// 试卷预览、试卷编辑、阅卷页面左右结构
+
+.list-box{
+  display: flex;
+  padding-bottom: 20px;
+  border-bottom: #eee 3px dotted;
+  margin-bottom: 20px
+}
+
+.list-qu{
+  flex-grow: 1;
+  padding-right: 20px;
+}
+
+.list-opt{
+  width: 200px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 36px;
+  flex-shrink: 0;
+}
+
+
+.list-sub-box{
+  display: flex;
+  margin-bottom: 20px;
+  border: #efefef 1px solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-right: -20px;
+}
+
+.list-sub-qu{
+  flex-grow: 1;
+  padding-right: 20px;
+}
+
+.list-sub-opt{
+  width: 200px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 36px;
+  flex-shrink: 0;
+}
+
+
+
+.el-dialog{
+  display: flex;
+  display: -ms-flex; /* 兼容IE */
+  flex-direction: column;
+  -ms-flex-direction: column; /* 兼容IE */
+  margin:0 !important;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  max-height:calc(100% - 30px);
+  max-width:calc(100% - 30px);
+}
+.el-dialog .el-dialog__body{
+  max-height: 100%;
+  flex: 1;
+  -ms-flex: 1 1 auto; /* 兼容IE */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+// 分享窗口样式
+.notify-box{
+  display: flex;
+  line-height: 20px;
+  font-size: 14px;
+  height: 60vh
+}
+
+.notify-box .left-box{
+  width: 300px;
+  background: #3881F8;
+  height: 60vh;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.notify-box .left-box .left-box-inner{
+  justify-content:center;
+  flex-direction: column;
+  display:flex;
+  padding: 30px;
+  height: 56vh;
+  background: #fff;
+  border-radius: 5px;
+  width: 100%
+}
+
+.notify-box .left-box .left-box-inner .logo-box{
+  display: flex;
+  align-items: center;
+  margin: 30px 0px
+}
+
+.notify-box .left-box .left-box-inner .logo-box img{
+  width: 30px;
+  height: 30px;
+}
+
+.notify-box .left-box .left-box-inner .site-name{
+  font-size: 14px;
+  font-weight: 800;
+  padding-left: 10px;
+  color: #666;
+}
+
+.notify-box .left-box .left-box-inner .scan-tip{
+  color: #888;
+  font-size: 12px;
+  text-align: center;
+}
+
+.notify-box .left-box .left-box-inner .info-line{
+  font-size: 12px;
+  background: #F5F5F5;
+  border-radius: 2px;
+  margin: 2px;
+  padding: 2px 5px;
+  text-align: left;
+}
+
+.notify-box .left-box .half-circle {
+  background: #3881F8;
+  display: inline-block;
+  border-radius: 100px;
+  width: 22px;
+  height: 22px;
+}
+
+.notify-box .left-box .left {
+  position: absolute;
+  left: 10px;
+  top: 28vh;
+}
+
+.notify-box .left-box .right {
+  position: absolute;
+  right: 10px;
+  top: 28vh;
+}
+
+.notify-box .right-box{
+  flex-grow: 1;
+  padding: 30px;
+  position: relative;
+  background: #fcfcfc;
+}
+
+.notify-box .right-box .link-box{
+  display: flex;
+  align-items: flex-start
+}
+
+.notify-box .right-box .link-copy{
+  width: 150px;
+  display: flex;
+  padding-left: 10px;
+  justify-content: flex-end;
+}
+
+.notify-box .right-box .btn-box{
+  position: absolute;
+  bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  width: 440px
+}
+
+.notify-box .right-box .main-title{
+  font-size: 18px;
+  font-weight: 700;
+  color: #000;
+}
+
+.notify-box .right-box .title{
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-top: 30px;
+}
+
+.notify-empty{
+  line-height: 30px;
+  padding: 50px;
+  font-size: 16px;
+}
+
+.notify-close{
+  z-index: 999;
+  position: absolute;
+  right:20px;
+  top:20px;
+  font-size: 20px;
+}
+
+
+
+// 首页box
+.t-box{
+  display: flex;
+  align-items: center;
+  height: 50px;
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.t-tt{
+  flex-grow: 1;
+  color: #333;
+}
+
+.t-link{
+  justify-content: flex-end;
+  font-size: 16px
+}
+
+.t-link a{
+  color: #666;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.t-link a:hover{
+  color: #ff8000;
+}
+
+.t-link small{
+  font-size: 12px;
+}
+
+.t-empty{
+  border: #dfe6ec 1px solid;
+  height: 275px;
+}
+
+
+.el-dialog__body {
+  padding: 0px 20px 20px 20px;
+  color: #606266;
+  font-size: 14px;
+  word-break: break-all;
+}
+
+.el-dialog__footer {
+  border-top: #f5f5f5 1px solid;
+  padding: 10px;
+}
+
+
+.el-upload-list--picture-card .el-upload-list__item{
+  background: #ccc;
+}
+
+
+
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width:540px
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width:720px
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width:960px
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width:1140px
+  }
+}
+
+@media (min-width: 1600px) {
+  .container {
+    max-width:1230px
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding-right:.46875rem;
+    padding-left: .46875rem
+  }
+}
+
+
+
+/*显示过长问题*/
+.el-select-dropdown__wrap > ul {
+  max-width: 60vw;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 大标题
+.big-t{
+  font-size: 18px;
+  font-weight: 700;
+  padding-bottom: 10px
+}
+
+.body-h{
+  height: calc(100vh - 250px);
+  overflow-y: auto
+}
+
+.exam-ps{
+  padding: 20px;
+}
+
+.exam-ps .lay-box{
+  height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.exam-ps .cam-box{
+  background: #0a84ff;
+  color: #fff;
+  margin-top: -5px;
+  font-size: 6px;
+  padding: 5px
+}
+
+.exam-ps .cam-box div{
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.exam-ps .title{
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 0 10px 0;
+}
+
+.exam-ps .sub-card{
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
