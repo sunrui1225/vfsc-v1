@@ -2,66 +2,45 @@ import Vue from 'vue'
 
 import Cookies from 'js-cookie'
 
-import 'normalize.css/normalize.css'
+import 'normalize.css/normalize.css' // a modern alternative to CSS resets
+
 import Element from 'element-ui'
-import 'element-ui/lib/theme-chalk/display.css'
 import './styles/element-variables.scss'
-import './styles/index.scss'
+import enLang from 'element-ui/lib/locale/lang/en'// 如果使用中文语言包请默认支持，无需额外引入，请删除该依赖
+
+import '@/styles/index.scss' // global css
 
 import App from './App'
 import store from './store'
 import router from './router'
 
-// import './icons'
-import './permission'
-import './utils/error-log'
+// import './icons' // icon
+import './permission' // permission control
+import './utils/error-log' // error log
 
-// 全局通用组件
-import cmComponents from './components'
-Vue.use(cmComponents)
+import * as filters from './filters' // global filters
 
-// 业务定义组件
-import viewComponents from './views'
-Vue.use(viewComponents)
+/**
+ * If you don't want to use mock-server
+ * you want to use MockJs for mock api
+ * you can execute: mockXHR()
+ *
+ * Currently MockJs will be used in the production environment,
+ * please remove it before going online ! ! !
+ */
+if (process.env.NODE_ENV === 'production') {
+    const { mockXHR } = require('../mock')
+    mockXHR()
+}
 
-// 窗口切换检测
-import visibility from 'vue-visibility-change'
-Vue.use(visibility)
-
-
-
-// 引入公共方法
-import common from './utils/common'
-Vue.use(common)
-
-// 引入vue-UUID组件
-import UUID from 'vue-uuid'
-Vue.use(UUID)
-
-// 消息提示
-import msg from './utils/msg'
-Vue.prototype.$msg = msg
-
-// 页面打印
-import Print from 'vue-print-nb'
-Vue.use(Print)
-
-// UI默认尺寸
 Vue.use(Element, {
-    size: Cookies.get('size') || 'medium'
+    size: Cookies.get('size') || 'medium', // set element-ui default size
+    locale: enLang // 如果使用中文，无需设置，请删除
 })
 
-// // 全局过滤器
-// import * as filters from './filters'
-// Object.keys(filters).forEach(key => {
-//     Vue.filter(key, filters[key])
-// })
-
-// 禁止右键指令
-Vue.directive('preventright', {
-    bind: function(el, binding, vnode) {
-        el.oncontextmenu = function() { return false }
-    }
+// register global utility filters
+Object.keys(filters).forEach(key => {
+    Vue.filter(key, filters[key])
 })
 
 Vue.config.productionTip = false
@@ -72,4 +51,3 @@ new Vue({
     store,
     render: h => h(App)
 })
-

@@ -1,36 +1,28 @@
-import defaultSettings from '../../settings'
-import { fetchDetail } from '../../api/sys/config/base'
+import variables from '@/styles/element-variables.scss'
+import defaultSettings from '@/settings'
 
-const { tagsView, fixedHeader, sidebarLogo, faceLogin } = defaultSettings
+const { showSettings, tagsView, fixedHeader, sidebarLogo } = defaultSettings
 
 const state = {
+  theme: variables.theme,
+  showSettings: showSettings,
   tagsView: tagsView,
   fixedHeader: fixedHeader,
-  sidebarLogo: sidebarLogo,
-  faceLogin: faceLogin,
-  siteData: {}
+  sidebarLogo: sidebarLogo
 }
 
 const mutations = {
-
-  SET_SITE_DATA: (state, siteData) => {
-    state.siteData = siteData
+  CHANGE_SETTING: (state, { key, value }) => {
+    // eslint-disable-next-line no-prototype-builtins
+    if (state.hasOwnProperty(key)) {
+      state[key] = value
+    }
   }
 }
 
 const actions = {
-  // 获取网站配置信息
-  getSite({ commit }) {
-    return new Promise((resolve, reject) => {
-      // 重新获取
-      fetchDetail({}).then(res => {
-        const { data } = res
-        commit('SET_SITE_DATA', data)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
+  changeSetting({ commit }, data) {
+    commit('CHANGE_SETTING', data)
   }
 }
 

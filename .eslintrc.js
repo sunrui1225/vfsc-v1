@@ -17,13 +17,12 @@ module.exports = {
         "vue/max-attributes-per-line": [2, {
             "singleline": 10,
             "multiline": {
-                "max": 2,
+                "max": 1,
                 "allowFirstLine": false
             }
         }],
         "vue/singleline-html-element-content-newline": "off",
         "vue/multiline-html-element-content-newline":"off",
-        "vue/require-default-prop":"off",
         "vue/name-property-casing": ["error", "PascalCase"],
         "vue/no-v-html": "off",
         'accessor-pairs': 2,
@@ -109,7 +108,7 @@ module.exports = {
         'no-multi-spaces': 2,
         'no-multi-str': 2,
         'no-multiple-empty-lines': [2, {
-            'max': 2
+            'max': 1
         }],
         'no-native-reassign': 2,
         'no-negated-in-lhs': 2,
@@ -194,13 +193,6 @@ module.exports = {
         'object-curly-spacing': [2, 'always', {
             objectsInObjects: false
         }],
-        'array-bracket-spacing': [2, 'never'],
-        'eqeqeq': 'off',
-        'selector-pseudo-element-no-unknown': [
-            true,
-            {
-                ignorePseudoElements: ['v-deep'],
-            },
-        ]
+        'array-bracket-spacing': [2, 'never']
     }
 }

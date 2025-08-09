@@ -1,228 +1,331 @@
 <template>
+  <div class="login-container">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
-  <div>
-    <el-row>
-
-      <el-col :lg="16" :md="10" class="left hidden-sm-and-down">
-        <img src="../../assets/web/images/login2.png" style="height: 45vh">
-      </el-col>
-
-      <el-col :lg="8" :md="14" class="right">
-
-        <div class="box">
-
-          <el-tabs v-model="activeName">
-            <el-tab-pane label="账号登录" name="account">
-
-              <el-form v-if="activeName === 'account'" ref="postForm" :model="postForm" :rules="loginRules" @keyup.enter.native="accountLogin">
-                <el-form-item prop="username">
-                  <el-input
-                    v-model="postForm.username"
-                    style="width: 100%"
-                    placeholder="账号"
-                    prefix-icon="el-icon-user"
-                  />
-                </el-form-item>
-
-                <el-form-item prop="password">
-                  <el-input
-                    v-model="postForm.password"
-                    style="width: 100%"
-                    placeholder="密码"
-                    type="password"
-                    prefix-icon="el-icon-lock"
-                    show-password
-                  />
-                </el-form-item>
-
-<!--                <el-form-item prop="captchaValue">-->
-<!--                  <yf-captcha ref="captcha" v-model="postForm" />-->
-<!--                </el-form-item>-->
-
-                <el-form-item>
-                  <el-button
-                    :loading="loading" type="primary"
-                    style="width: 100%"
-                    @click="accountLogin"
-                  >登录</el-button>
-                </el-form-item>
-
-              </el-form>
-
-            </el-tab-pane>
-<!--            <el-tab-pane v-if="siteData.props.mobileLogin" label="手机登录" name="mobile">-->
-
-<!--              <el-form v-if="activeName === 'mobile'" ref="postForm" :model="postForm" :rules="loginRules" @keyup.enter.native="mobileLogin">-->
-<!--                <el-form-item prop="mobile">-->
-<!--                  <el-input-->
-<!--                    v-model="postForm.mobile"-->
-<!--                    style="width: 100%"-->
-<!--                    placeholder="手机号码"-->
-<!--                    prefix-icon="el-icon-mobile"-->
-<!--                  />-->
-<!--                </el-form-item>-->
-
-<!--                <el-form-item prop="smsCode">-->
-<!--                  <sms-input ref="sms" v-model="postForm" :type="2" />-->
-<!--                </el-form-item>-->
-
-<!--                <el-form-item>-->
-<!--                  <el-button-->
-<!--                    :loading="loading"-->
-<!--                    type="primary"-->
-<!--                    style="width: 100%"-->
-<!--                    @click="mobileLogin"-->
-<!--                  >登录</el-button>-->
-<!--                </el-form-item>-->
-
-<!--              </el-form>-->
-<!--            </el-tab-pane>-->
-
-          </el-tabs>
-
-<!--          <div style="text-align: right; line-height: 10px">-->
-<!--            <el-link v-if="siteData.props.userReg" href="/register">立即注册</el-link>-->
-<!--            <el-link v-if="siteData.props.mobileLogin" href="/forgot" style="margin-left: 10px">忘记密码？</el-link>-->
-<!--          </div>-->
-
-<!--          <demo-account v-if="isDemo" />-->
-
-<!--          <div v-if="siteData.h5Host || siteData.mpCode" style="line-height: 35px; margin-top: 10px">-->
-<!--            <div class="title-line">手机端</div>-->
-<!--            <el-button v-if="siteData.h5Host" size="mini" type="primary" plain round @click="showH5Code">H5学员端</el-button>-->
-<!--            <el-button v-if="siteData.mpCode" size="mini" type="primary" plain round @click="showMpCode">小程序学员端</el-button>-->
-<!--          </div>-->
-
-<!--          <third-login />-->
-
-        </div>
-
-      </el-col>
-
-    </el-row>
-
-    <el-dialog
-      :visible.sync="h5Visible"
-      width="340px"
-      style="text-align: center"
-    >
-      <div class="code-tips">扫码进入H5学员端</div>
-      <div style="width: 300px; border: #ddd 1px solid">
-        <vue-qr
-          :size="298"
-          :logo-src="siteData.backLogo"
-          :logo-scale="0.2"
-          :text="siteData.h5Host"/>
+      <div class="title-container">
+        <h3 class="title">Login Form</h3>
       </div>
-    </el-dialog>
 
-    <el-dialog
-      :visible.sync="mpVisible"
-      width="340px"
-      style="text-align: center"
-    >
-      <div class="code-tips">扫码进入小程序学员端</div>
-      <img :src="siteData.mpCode" style="width: 300px; border: #ddd 1px solid">
-    </el-dialog>
+      <el-form-item prop="username">
+        <span class="svg-container">
+          <svg-icon icon-class="user" />
+        </span>
+        <el-input
+            ref="username"
+            v-model="loginForm.username"
+            placeholder="Username"
+            name="username"
+            type="text"
+            tabindex="1"
+            autocomplete="on"
+        />
+      </el-form-item>
 
+      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+        <el-form-item prop="password">
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input
+              :key="passwordType"
+              ref="password"
+              v-model="loginForm.password"
+              :type="passwordType"
+              placeholder="Password"
+              name="password"
+              tabindex="2"
+              autocomplete="on"
+              @keyup.native="checkCapslock"
+              @blur="capsTooltip = false"
+              @keyup.enter.native="handleLogin"
+          />
+          <span class="show-pwd" @click="showPwd">
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          </span>
+        </el-form-item>
+      </el-tooltip>
+
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+
+<!--      <div style="position:relative">-->
+<!--        <div class="tips">-->
+<!--          <span>Username : admin</span>-->
+<!--          <span>Password : any</span>-->
+<!--        </div>-->
+<!--        <div class="tips">-->
+<!--          <span style="margin-right:18px;">Username : editor</span>-->
+<!--          <span>Password : any</span>-->
+<!--        </div>-->
+
+<!--        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">-->
+<!--          Or connect with-->
+<!--        </el-button>-->
+<!--      </div>-->
+    </el-form>
+
+    <el-dialog title="Or connect with" :visible.sync="showDialog">
+      Can not be simulated on local, so please combine you own business simulation! ! !
+      <br>
+      <br>
+      <br>
+      <social-sign />
+    </el-dialog>
   </div>
-
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import VueQr from 'vue-qr'
-// import ThirdLogin from '@/views/login/components/ThirdLogin.vue'
-// import DemoAccount from '@/views/login/components/DemoAccount.vue'
+import { validUsername } from '@/utils/validate'
+import SocialSign from './components/SocialSignin'
 
 export default {
-  // components: { DemoAccount, ThirdLogin, VueQr },
-  components: {  VueQr },
+  name: 'Login',
+  components: { SocialSign },
   data() {
-    return {
-      isDemo: this.$isDemo,
-      activeName: 'account',
-      loading: false,
-      h5Visible: false,
-      mpVisible: false,
-      wxVisible: false,
-      postForm: {
-        smsCode: '',
-        captchaKey: '',
-        captchaValue: ''
-      },
-      loginRules: {
-        username: [{ required: true, message: '账号不能为空' }],
-        password: [{ required: true, message: '密码不能为空' }],
-        // captchaValue: [{ required: true, message: '验证码不能为空' }],
-        smsCode: [{ required: true, message: '短信验证码不能为空' }],
-        mobile: [{ required: true, message: '手机号不能为空' }]
+    const validateUsername = (rule, value, callback) => {
+      if (!validUsername(value)) {
+        callback(new Error('Please enter the correct user name'))
+      } else {
+        callback()
       }
     }
-  },
-
-  computed: {
-    ...mapGetters([
-      'siteData'
-    ])
-  },
-
-
-  methods: {
-
-    showH5Code() {
-      this.h5Visible = true
-    },
-    showMpCode() {
-      this.mpVisible = true
-    },
-
-    async mobileLogin() {
-      this.$refs.postForm.validate((valid) => {
-        if (!valid) {
-          return
-        }
-
-        this.loading = true
-        this.$store.dispatch('user/mobileLogin', this.postForm)
-          .then(() => {
-            this.$router.push('/')
-          }).catch(err => {
-            if (err.message === '10010012') {
-              this.$refs.captcha.changeCode()
-            }
-            console.log('错误信息为：', err)
-            this.loading = false
-          })
-      })
-    },
-
-    accountLogin() {
-      this.$refs.postForm.validate((valid) => {
-        if (!valid) {
-          return
-        }
-
-        console.info('33333333333333333333')
-
-        this.loading = true
-        // this.$store.dispatch('user/login', this.postForm)
-        //   .then(() => {
-        //     this.$router.push('/')
-        //   })
-        //   .catch(err => {
-        //     if (err.message === '10010012') {
-        //       this.$refs.captcha.changeCode()
-        //     }
-        //     this.loading = false
-        //   })
-
-        this.$router.push('/')
-        this.loading = false
-        console.info('4444444444444444')
-
-      })
+    const validatePassword = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error('The password can not be less than 6 digits'))
+      } else {
+        callback()
+      }
     }
+    return {
+      loginForm: {
+        username: 'admin',
+        password: '111111'
+      },
+      loginRules: {
+        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+      },
+      passwordType: 'password',
+      capsTooltip: false,
+      loading: false,
+      showDialog: false,
+      redirect: undefined,
+      otherQuery: {}
+    }
+  },
+  watch: {
+    $route: {
+      handler: function(route) {
+        const query = route.query
+        if (query) {
+          this.redirect = query.redirect
+          this.otherQuery = this.getOtherQuery(query)
+        }
+      },
+      immediate: true
+    }
+  },
+  created() {
+    // window.addEventListener('storage', this.afterQRScan)
+  },
+  mounted() {
+    if (this.loginForm.username === '') {
+      this.$refs.username.focus()
+    } else if (this.loginForm.password === '') {
+      this.$refs.password.focus()
+    }
+  },
+  destroyed() {
+    // window.removeEventListener('storage', this.afterQRScan)
+  },
+  methods: {
+    checkCapslock(e) {
+      const { key } = e
+      this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
+    },
+    showPwd() {
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
+      } else {
+        this.passwordType = 'password'
+      }
+      this.$nextTick(() => {
+        this.$refs.password.focus()
+      })
+    },
+    handleLogin() {
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+
+          console.info("111111111")
+
+
+          this.loading = true
+          this.$store.dispatch('user/login', this.loginForm)
+              .then(() => {
+                console.info("redirect:%s", this.redirect)
+                console.info("this.otherQuery:%s", this.otherQuery)
+
+                this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+                this.loading = false
+              })
+              .catch(() => {
+                this.loading = false
+              })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    getOtherQuery(query) {
+      return Object.keys(query).reduce((acc, cur) => {
+        if (cur !== 'redirect') {
+          acc[cur] = query[cur]
+        }
+        return acc
+      }, {})
+    }
+    // afterQRScan() {
+    //   if (e.key === 'x-admin-oauth-code') {
+    //     const code = getQueryObject(e.newValue)
+    //     const codeMap = {
+    //       wechat: 'code',
+    //       tencent: 'code'
+    //     }
+    //     const type = codeMap[this.auth_type]
+    //     const codeName = code[type]
+    //     if (codeName) {
+    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
+    //         this.$router.push({ path: this.redirect || '/' })
+    //       })
+    //     } else {
+    //       alert('第三方登录失败')
+    //     }
+    //   }
+    // }
   }
 }
 </script>
+
+<style lang="scss">
+/* 修复input 背景不协调 和光标变色 */
+/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
+
+$bg:#283443;
+$light_gray:#fff;
+$cursor: #fff;
+
+@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
+  .login-container .el-input input {
+    color: $cursor;
+  }
+}
+
+/* reset element-ui css */
+.login-container {
+  .el-input {
+    display: inline-block;
+    height: 47px;
+    width: 85%;
+
+    input {
+      background: transparent;
+      border: 0px;
+      -webkit-appearance: none;
+      border-radius: 0px;
+      padding: 12px 5px 12px 15px;
+      color: $light_gray;
+      height: 47px;
+      caret-color: $cursor;
+
+      &:-webkit-autofill {
+        box-shadow: 0 0 0px 1000px $bg inset !important;
+        -webkit-text-fill-color: $cursor !important;
+      }
+    }
+  }
+
+  .el-form-item {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    color: #454545;
+  }
+}
+</style>
+
+<style lang="scss" scoped>
+$bg:#2d3a4b;
+$dark_gray:#889aa4;
+$light_gray:#eee;
+
+.login-container {
+  min-height: 100%;
+  width: 100%;
+  background-color: $bg;
+  overflow: hidden;
+
+  .login-form {
+    position: relative;
+    width: 520px;
+    max-width: 100%;
+    padding: 160px 35px 0;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .tips {
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 10px;
+
+    span {
+      &:first-of-type {
+        margin-right: 16px;
+      }
+    }
+  }
+
+  .svg-container {
+    padding: 6px 5px 6px 15px;
+    color: $dark_gray;
+    vertical-align: middle;
+    width: 30px;
+    display: inline-block;
+  }
+
+  .title-container {
+    position: relative;
+
+    .title {
+      font-size: 26px;
+      color: $light_gray;
+      margin: 0px auto 40px auto;
+      text-align: center;
+      font-weight: bold;
+    }
+  }
+
+  .show-pwd {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    font-size: 16px;
+    color: $dark_gray;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .thirdparty-button {
+    position: absolute;
+    right: 0;
+    bottom: 6px;
+  }
+
+  @media only screen and (max-width: 470px) {
+    .thirdparty-button {
+      display: none;
+    }
+  }
+}
+</style>
