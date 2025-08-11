@@ -1,6 +1,6 @@
 <template>
   <div id="tags-view-container" class="tags-view-container">
-    <scroll-pane ref="scrollPane" class="tags-view-wrapper">
+    <scroll-pane ref="scrollPane" class="tags-view-wrapper" @scroll="handleScroll">
       <router-link
         v-for="tag in visitedViews"
         ref="tag"
@@ -17,10 +17,10 @@
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)">刷新当前标签</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">关闭当前标签</li>
-      <li @click="closeOthersTags">关闭其它标签页</li>
-      <li @click="closeAllTags(selectedTag)">关闭所有标签页</li>
+      <li @click="refreshSelectedTag(selectedTag)">Refresh</li>
+      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">Close</li>
+      <li @click="closeOthersTags">Close Others</li>
+      <li @click="closeAllTags(selectedTag)">Close All</li>
     </ul>
   </div>
 </template>
@@ -160,9 +160,14 @@ export default {
       if (latestView) {
         this.$router.push(latestView.fullPath)
       } else {
-        // 全部关闭tab时
-        const index = this.$store.getters.index
-        this.$router.push(index)
+        // now the default is to redirect to the home page if there is no tags-view,
+        // you can adjust it according to your needs.
+        if (view.name === 'Dashboard') {
+          // to reload home page
+          this.$router.replace({ path: '/redirect' + view.fullPath })
+        } else {
+          this.$router.push('/')
+        }
       }
     },
     openMenu(tag, e) {
@@ -184,6 +189,9 @@ export default {
     },
     closeMenu() {
       this.visible = false
+    },
+    handleScroll() {
+      this.closeMenu()
     }
   }
 }
@@ -217,9 +225,9 @@ export default {
         margin-right: 15px;
       }
       &.active {
-        background-color: #1890FF;
+        background-color: #42b983;
         color: #fff;
-        border-color: #1890FF;
+        border-color: #42b983;
         &::before {
           content: '';
           background: #fff;

@@ -3,8 +3,7 @@
 import Layout from '@/layout'
 
 const tableRouter = {
-  // path: '/table',
-  path: '/',
+  path: '/table',
   component: Layout,
   redirect: '/table/complex-table',
   name: 'Table',
@@ -32,8 +31,7 @@ const tableRouter = {
     //   meta: { title: 'Inline Edit' }
     // },
     {
-      // path: 'complex-table',
-      path: 'table/complex-table',
+      path: 'complex-table',
       component: () => import('@/views/table/complex-table'),
       name: 'ComplexTable',
       meta: { title: 'Complex Table' }
