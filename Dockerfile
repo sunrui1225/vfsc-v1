@@ -2,6 +2,9 @@
 FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/node:16.17.1-nslt AS builder
 
 USER root
+# 安装 git
+RUN yum install -y git
+
 
 # 1. 完全禁用 Git 相关功能
 # 设置环境变量阻止 Git 操作
