@@ -35,7 +35,7 @@ USER node
 
 # 4. 手动修复 lock 文件（关键步骤！）
 # 移除所有 git+https 引用
-RUN sed -i 's|git+https://[^"]*||g' yarn.lock package-lock.json
+RUN sed -i 's|git+https://[^"]*||g' package-lock.json
 
 RUN yarn install --prefer-offline \
     && npm run build:prod
