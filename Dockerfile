@@ -33,11 +33,13 @@ USER node
 ## 在容器中构建项目
 #RUN npm run build:prod
 
-# 5. 安装依赖（完全禁用脚本和 Git）
-RUN npm install --prefer-offline --ignore-scripts --no-audit --no-fund --no-optional || (cat /home/node/.npm/_logs/*.log && exit 1)
 
-# 6. 构建项目
-RUN npm run build:prod
+RUN cat /home/node/.npm/_logs/*.log
+
+
+# 在安装命令后添加日志查看
+RUN npm install || (cat /home/node/.npm/_logs/*.log && exit 1) \
+    && npm run build:prod
 
 # 使用轻量级的官方 Nginx 镜像作为基础镜像
 FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/nginx_optimized:20240221-1.20.1-2.3.0
