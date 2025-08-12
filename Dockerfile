@@ -1,14 +1,27 @@
-FROM registry.cn-beijing.aliyuncs.com/jlf-space/nginx:1.20
+# 使用最新的官方 Node.js 镜像作为基础镜像，并命名为 `builder` 阶段
+FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/node:16.17.1-nslt
+ AS builder
 
-ARG artifict
+# 设置工作目录
+WORKDIR /app
 
-RUN echo $artifict
+# 将当前目录下的所有文件复制到容器的工作目录 `/app` 中
+COPY . .
 
-ADD $artifict /usr/share/nginx/dist.tgz
+# 在容器中安装项目依赖
+RUN npm install
 
-RUN tar -xvzf /usr/share/nginx/dist.tgz -C /usr/share/nginx/html --strip-components=1
-#COPY ./dist/ /usr/share/nginx/html
+# 在容器中构建项目
+RUN npm run build
 
-COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+# 使用轻量级的官方 Nginx 镜像作为基础镜像
+FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/nginx_optimized:20240221-1.20.1-2.3.0
 
-EXPOSE 3005
+# 时区
+ENV TZ=Asia/Shanghai
+
+# 本地的 `nginx.conf` 文件复制到容器的 `/etc/nginx/conf.d/default.conf`
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# `builder` 阶段中复制构建好的文件到 Nginx 容器的网页根目录 `/usr/share/nginx/html`
+COPY --from=builder /app/dist /usr/share/nginx/html
