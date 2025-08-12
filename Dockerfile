@@ -3,8 +3,11 @@ FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/node:16.
 
 USER root
 # 安装 git
-RUN yum install -y git
-
+RUN yarn config set registry https://registry.npm.taobao.org \
+    &&& yarn config set raphael:registry "https://registry.npm.taobao.org" \
+    && yarn config set strict-ssl false \
+    && yarn config set ignore-engines true \
+    && yum install -y git
 
 # 1. 完全禁用 Git 相关功能
 # 设置环境变量阻止 Git 操作
@@ -30,10 +33,7 @@ USER node
 ## 在容器中构建项目
 #RUN npm run build:prod
 
-RUN yarn config set registry https://registry.npm.taobao.org \
-    && yarn config set strict-ssl false \
-    && yarn config set ignore-engines true \
-    && yarn install --prefer-offline \
+RUN yarn install --prefer-offline \
     && npm run build:prod
 
 # 使用轻量级的官方 Nginx 镜像作为基础镜像
