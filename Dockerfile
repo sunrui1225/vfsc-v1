@@ -5,13 +5,15 @@ FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/node:16.
 WORKDIR /app
 
 # 将当前目录下的所有文件复制到容器的工作目录 `/app` 中
-COPY . .
+COPY --chown=node:node . .
+
+USER node
 
 # 在容器中安装项目依赖
 RUN npm install
 
 # 在容器中构建项目
-RUN npm run build
+RUN npm run build:prod
 
 # 使用轻量级的官方 Nginx 镜像作为基础镜像
 FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/nginx_optimized:20240221-1.20.1-2.3.0
