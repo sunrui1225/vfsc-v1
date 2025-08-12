@@ -34,7 +34,6 @@ USER node
 #RUN npm run build:prod
 
 
-RUN cat /home/node/.npm/_logs/*.log
 
 
 # 在安装命令后添加日志查看
