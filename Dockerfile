@@ -2,22 +2,15 @@
 FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/node:16.17.1-nslt AS builder
 
 USER root
-# 安装 git
-RUN yarn config set registry https://registry.npm.taobao.org \
-    && yarn config set strict-ssl false \
-    && yarn config set ignore-engines true \
-    && yum install -y git
 
-# 1. 完全禁用 Git 相关功能
-# 设置环境变量阻止 Git 操作
+# 1. 完全禁用 Git 和进程限制
 ENV GIT_DISABLE=1
-ENV GIT_TERMINAL_PROMPT=0
-ENV GIT_SSH_COMMAND=""
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 
-# 2. 配置 npm 忽略所有 Git 依赖
+# 2. 配置 npm 忽略所有 Git 操作
 RUN npm config set git false && \
-    npm config set optional false
-
+    npm config set fund false && \
+    npm config set audit false
 
 
 
@@ -27,9 +20,10 @@ WORKDIR /app
 # 将当前目录下的所有文件复制到容器的工作目录 `/app` 中
 COPY --chown=node:node . .
 
-# 4. 手动修复 lock 文件（关键步骤！）
-# 移除所有 git+https 引用
-RUN sed -i 's|git+https://[^"]*||g' /app/package-lock.json
+# 4. 清理不必要的文件（减少内存压力）
+RUN rm -rf .git .github docs test
+
+
 
 USER node
 
@@ -39,8 +33,11 @@ USER node
 ## 在容器中构建项目
 #RUN npm run build:prod
 
-RUN npm install \
-    && npm run build:prod
+# 5. 安装依赖（完全禁用脚本和 Git）
+RUN npm install --prefer-offline --ignore-scripts --no-audit --no-fund --no-optional
+
+# 6. 构建项目
+RUN npm run build:prod
 
 # 使用轻量级的官方 Nginx 镜像作为基础镜像
 FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/nginx_optimized:20240221-1.20.1-2.3.0
