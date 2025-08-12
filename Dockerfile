@@ -2,7 +2,16 @@
 FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/node:16.17.1-nslt AS builder
 
 USER root
-RUN yum install -y git
+
+# 1. 完全禁用 Git 相关功能
+# 设置环境变量阻止 Git 操作
+ENV GIT_DISABLE=1
+ENV GIT_TERMINAL_PROMPT=0
+ENV GIT_SSH_COMMAND=""
+
+# 2. 配置 npm 忽略所有 Git 依赖
+RUN npm config set git false && \
+    npm config set optional false
 
 # 设置工作目录
 WORKDIR /app
@@ -12,11 +21,17 @@ COPY --chown=node:node . .
 
 USER node
 
-# 在容器中安装项目依赖
-RUN npm install
+## 在容器中安装项目依赖
+#RUN npm install
+#
+## 在容器中构建项目
+#RUN npm run build:prod
 
-# 在容器中构建项目
-RUN npm run build:prod
+RUN yarn config set registry https://registry.npm.taobao.org \
+    && yarn config set strict-ssl false \
+    && yarn config set ignore-engines true \
+    && yarn install --prefer-offline \
+    && npm run build:prod
 
 # 使用轻量级的官方 Nginx 镜像作为基础镜像
 FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/nginx_optimized:20240221-1.20.1-2.3.0
