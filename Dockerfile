@@ -39,7 +39,7 @@ USER node
 ## 在容器中构建项目
 #RUN npm run build:prod
 
-RUN yarn install --prefer-offline \
+RUN npm install --prefer-offline \
     && npm run build:prod
 
 # 使用轻量级的官方 Nginx 镜像作为基础镜像
