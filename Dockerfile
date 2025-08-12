@@ -19,9 +19,7 @@ ENV GIT_SSH_COMMAND=""
 RUN npm config set git false && \
     npm config set optional false
 
-# 4. 手动修复 lock 文件（关键步骤！）
-# 移除所有 git+https 引用
-RUN sed -i 's|git+https://[^"]*||g' package-lock.json
+
 
 
 # 设置工作目录
@@ -29,6 +27,10 @@ WORKDIR /app
 
 # 将当前目录下的所有文件复制到容器的工作目录 `/app` 中
 COPY --chown=node:node . .
+
+# 4. 手动修复 lock 文件（关键步骤！）
+# 移除所有 git+https 引用
+RUN sed -i 's|git+https://[^"]*||g' package-lock.json
 
 USER node
 
