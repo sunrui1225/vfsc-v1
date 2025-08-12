@@ -1,6 +1,8 @@
 # 使用最新的官方 Node.js 镜像作为基础镜像，并命名为 `builder` 阶段
 FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/node:16.17.1-nslt AS builder
 
+RUN yum install -y git
+
 # 设置工作目录
 WORKDIR /app
 
