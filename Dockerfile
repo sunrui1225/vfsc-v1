@@ -29,7 +29,7 @@ USER node
 
 ## 在容器中安装项目依赖
 #RUN npm install
-#
+
 ## 在容器中构建项目
 #RUN npm run build:prod
 
