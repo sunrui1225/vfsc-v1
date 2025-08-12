@@ -18,7 +18,7 @@ spec:
         app: ${APP_NAME}
     spec:
       containers:
-        - image: ${DATETIME}
+        - image: ${IMAGE}
           imagePullPolicy: Always
           name: ${APP_NAME}
           ports:
