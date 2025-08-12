@@ -19,6 +19,11 @@ ENV GIT_SSH_COMMAND=""
 RUN npm config set git false && \
     npm config set optional false
 
+# 4. 手动修复 lock 文件（关键步骤！）
+# 移除所有 git+https 引用
+RUN sed -i 's|git+https://[^"]*||g' package-lock.json
+
+
 # 设置工作目录
 WORKDIR /app
 
@@ -32,10 +37,6 @@ USER node
 #
 ## 在容器中构建项目
 #RUN npm run build:prod
-
-# 4. 手动修复 lock 文件（关键步骤！）
-# 移除所有 git+https 引用
-RUN sed -i 's|git+https://[^"]*||g' package-lock.json
 
 RUN yarn install --prefer-offline \
     && npm run build:prod
