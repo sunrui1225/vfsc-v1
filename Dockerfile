@@ -25,8 +25,6 @@ RUN rm -rf .git .github docs test
 
 
 
-USER node
-
 ## 在容器中安装项目依赖
 #RUN npm install
 
@@ -37,7 +35,7 @@ USER node
 
 
 # 在安装命令后添加日志查看
-RUN npm install || (cat /home/node/.npm/_logs/*.log && exit 1) \
+RUN npm install \
     && npm run build:prod
 
 # 使用轻量级的官方 Nginx 镜像作为基础镜像
