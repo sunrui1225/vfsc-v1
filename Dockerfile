@@ -4,7 +4,6 @@ FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/node:16.
 USER root
 # 安装 git
 RUN yarn config set registry https://registry.npm.taobao.org \
-    && yarn config set raphael:registry "https://registry.npm.taobao.org" \
     && yarn config set strict-ssl false \
     && yarn config set ignore-engines true \
     && yum install -y git
@@ -30,7 +29,7 @@ COPY --chown=node:node . .
 
 # 4. 手动修复 lock 文件（关键步骤！）
 # 移除所有 git+https 引用
-RUN sed -i 's|git+https://[^"]*||g' package-lock.json
+RUN sed -i 's|git+https://[^"]*||g' /app/package-lock.json
 
 USER node
 
