@@ -34,7 +34,7 @@ USER node
 #RUN npm run build:prod
 
 # 5. 安装依赖（完全禁用脚本和 Git）
-RUN npm install --prefer-offline --ignore-scripts --no-audit --no-fund --no-optional
+RUN npm install --prefer-offline --ignore-scripts --no-audit --no-fund --no-optional || (cat /home/node/.npm/_logs/*.log && exit 1)
 
 # 6. 构建项目
 RUN npm run build:prod
