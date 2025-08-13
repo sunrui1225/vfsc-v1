@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: ${APP_NAME}
-  name: ${APP_NAME}
+  name: ${APP_NAME}-deployment  # 添加后缀避免命名冲突
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: ${APP_NAME}
-  strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: ${APP_NAME}
     spec:
       containers:
-        - image: >-
-            ${IMAGE}
+        - image: ${IMAGE_REPO}:${IMAGE_TAG}  # 分离仓库和标签
           imagePullPolicy: Always
-          name: ${APP_NAME}
+          name: ${APP_NAME}-container  # 容器名添加后缀
           ports:
-            - containerPort: 8080
-          resources: {}
-status: {}
----
+            - containerPort: 80  # 改为标准 Web 端口
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "0.5"
+              memory: "256Mi"
