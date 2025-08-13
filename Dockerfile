@@ -2,7 +2,6 @@
 FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/node:16.17.1-nslt AS builder
 
 USER root
-
 # 1. 完全禁用 Git 和进程限制
 ENV GIT_DISABLE=1
 ENV NODE_OPTIONS="--max-old-space-size=4096"
@@ -12,19 +11,13 @@ RUN npm config set git false && \
     npm config set fund false && \
     npm config set audit false
 
-
 # 设置工作目录
 WORKDIR /app
 
 # 将当前目录下的所有文件复制到容器的工作目录 `/app` 中
 COPY --chown=node:node . .
-
-# 4. 清理不必要的文件（减少内存压力）
-RUN rm -rf .git .github docs test
-
 # 在容器中安装项目依赖
 RUN npm install
-
 # 在容器中构建项目
 RUN npm run build:prod
 
