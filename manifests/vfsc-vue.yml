@@ -15,7 +15,7 @@ spec:
         app: ${APP_NAME}
     spec:
       containers:
-        - image: ${IMAGE_REPO}:${IMAGE_TAG}  # 分离仓库和标签
+        - image: ${IMAGE_REPO}
           imagePullPolicy: Always
           name: ${APP_NAME}-container  # 容器名添加后缀
           ports:
